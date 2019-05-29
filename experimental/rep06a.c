@@ -1,89 +1,86 @@
 #include <stdio.h>
-#include <stdlib.h>
+#include <string.h>
 
+#define DEFAULT_SEPARATOR ':'
 #define N 256
 
 void usage(void) {
   fputs("Usage: rep06a [-cX] [-] [FILENAME1] [FILENAME2]...\n", stderr);
 }
 
-const char *find_separator(const char *buffer, int separator) {
-  if (!buffer) {
-    return NULL;
-  }
-  while (*buffer != '\0') {
-    if (*buffer == separator) {
-      return buffer;
-    }
-    else {
-      ++buffer;
-    }
-  }
-  return NULL;
-}
-
-void print_rest_of_file(FILE *in) {
+void print_rest_of_file(FILE *fin, FILE *fout) {
   char buffer[N];
   char *r;
 
-  r = fgets(buffer, N, in);
-  if (r) {
-    fputs(buffer, stdout);
-    print_rest_of_file(in);
+  r = fgets(buffer, N, fin);
+  while (r) {
+    fputs(buffer, fout);
+    r = fgets(buffer, N, fin);
   }
 }
 
-void process(FILE *in, int separator) {
+void process(FILE *fin, int separator) {
   char buffer[N];
   char *r;
 
-  r = fgets(buffer, N, in);
-  if (r) {
+  r = fgets(buffer, N, fin);
+  while (r) {
     const char *p;
 
-    p = find_separator(buffer, separator);
-    if (p) {
+    p = strchr(buffer, separator);
+    if (p && *p != '\0') {
       fputs(p, stdout);
-      print_rest_of_file(in);
+      print_rest_of_file(fin, stdout);
+      r = NULL;
     }
     else {
-      process(in, separator);
+      r = fgets(buffer, N, fin);
     }
   }
 }
 
 int main(int argc, const char *const *argv) {
-  FILE *in;
-  int separator = ':';
+  int separator = DEFAULT_SEPARATOR;
 
+  if (argc == 1) {
+    usage();
+    return 0;
+  }
   while (--argc > 0) {
     ++argv;
     if ((*argv)[0] == '-') {
       switch ((*argv)[1]) {
         case '\0':
-          in = stdin;
-          process(in, separator);
+          process(stdin, separator);
           break;
         case 'c':
           if ((*argv)[2] != '\0') {
             separator = (*argv)[2];
+          }
+          else {
+            fprintf(stderr, "Warning: separator is not given.\n");
           }
           break;
         case 'h':
         case 'H':
         case '?':
           usage();
-          exit(0);
           break;
         default:
+          fprintf(stderr, "Waring: unknown parameter: %s\n", *argv);
           break;
       }
     }
     else {
-      in = fopen(*argv, "r");
-      if (in) {
-        process(in, separator);
-        fclose(in);
+      FILE *fin;
+
+      fin = fopen(*argv, "r");
+      if (fin) {
+        process(fin, separator);
+        fclose(fin);
+      }
+      else {
+        fprintf(stderr, "Warning: cannot open: %s\n", *argv);
       }
     }
   }

@@ -13,7 +13,7 @@ int main(void) {
     fputs(p, stdout);
   }
   else {
-    fputs("Not found.\n", stdout);
+    fputs("Not found.\n", stderr);
   }
   return 0;
 }

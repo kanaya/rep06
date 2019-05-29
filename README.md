@@ -9,7 +9,8 @@ C言語初級者の学生から
 追記：ツールとして最低限の使用に耐えるレベルのプログラムになるように書き直したものを `experimental/rep06a.c` として置きました．
 
 ```
-$ echo 'Hello, world.' | rep06a -c, -
+$ cc -o rep06a rep06a.c
+$ echo 'Hello, world.' | ./rep06a -c, -
 ```
 
 のように使います．

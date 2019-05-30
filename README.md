@@ -18,7 +18,7 @@ $ echo 'Hello, world.' | ./rep06a -c, -
 追記：Python3でだいたい同じことをするコードを `experimental/rep06b.py` として置きました．こちらはUnicodeが通ります．
 
 ```
-$ python3 rep06b.py --separator , 'Hello, world.'
+$ python3 rep06b.py --separator , helloworld.txt
 ```
 
 のように使います．

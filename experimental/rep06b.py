@@ -1,15 +1,21 @@
 import argparse
 
 parser = argparse.ArgumentParser(description='String splitter')
-parser.add_argument('string', help='Target string')
+parser.add_argument('filename', help='Target file')
 parser.add_argument('--separator', default=':', help='String separator')
 
 args = parser.parse_args()
 
-t = args.string
-s = args.separator
+fn = args.filename
+sp = args.separator
 
-n = t.find(s)
-sliced = t[n:]
-
-print(sliced)
+found = False
+with open(fn) as f:
+	for ln in f:
+		if not found:
+			n = ln.find(sp)
+			if n >= 0:
+				print(ln[n:], end='')
+				found = True
+		else:
+			print(ln, end='')

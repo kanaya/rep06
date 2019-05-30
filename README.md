@@ -10,10 +10,16 @@ C言語初級者の学生から
 
 ```
 $ cc -o rep06a rep06a.c
+$ ./rep06a -c, helloworld.txt
+```
+
+のように使います．ファイル名に `-` を指定すると標準入力を読みます．そのため
+
+```
 $ echo 'Hello, world.' | ./rep06a -c, -
 ```
 
-のように使います．
+のように使えます．
 
 追記：Python3でだいたい同じことをするコードを `experimental/rep06b.py` として置きました．こちらはUnicodeが通ります．
 
